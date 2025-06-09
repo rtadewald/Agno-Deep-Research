@@ -1,0 +1,9 @@
+[project]
+name = "researcher"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agno>=1.5.10",
+]
