@@ -3,12 +3,15 @@ from agno.models.openai import OpenAIChat
 from agno.tools.tavily import TavilyTools
 from agno.playground import Playground, serve_playground_app
 import yaml
+from pathlib import Path
 
 from dotenv import load_dotenv
 load_dotenv()
 
 
-prompt = yaml.safe_load(open("prompts/researcher.yaml"))
+ROOT = Path(__file__).resolve().parent
+PROMPT_PATH = ROOT / "prompts" / "researcher.yaml"
+prompt = yaml.safe_load(PROMPT_PATH.open())
 researcher = Agent(
     model=OpenAIChat(id="gpt-4.1-mini"),
     name="Researcher",
