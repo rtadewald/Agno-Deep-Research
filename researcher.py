@@ -1,15 +1,21 @@
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools.tavily import TavilyTools
-
-from agno.playground import Playground, serve_playground_app
+from agno.playground import Playground
+from agno.storage.sqlite import SqliteStorage
 from dotenv import load_dotenv
 load_dotenv()
 
 researcher = Agent(
-    model=OpenAIChat(id="gpt-4.1-mini"),
     name="Researcher",
-    tools=[TavilyTools()], 
+    agent_id="researcher-agent",
+    model=OpenAIChat(id="gpt-4.1-mini"),
+    tools=[TavilyTools()],
+    storage=SqliteStorage(
+        table_name="researcher_sessions", 
+        db_file="tmp/researcher.db", 
+        auto_upgrade_schema=True
+    ),
     instructions=""""
         Você é um pesquisador sênior e receberá do usuário um 
         assunto e deverá montar uma pesquisa na 
@@ -32,9 +38,21 @@ researcher = Agent(
         - Inclua os links de referência junto de cada informação.
         - Seu relatório deve ser formatado em markdown.
         </relatorio>
-    """
+    """,
+    add_history_to_messages=True,
+    add_datetime_to_instructions=True,
+    num_history_responses=5,
+    markdown=True,
+    show_tool_calls=True,
 )
 
-app = Playground(agents=[researcher]).get_app()
+playground = Playground(
+    agents=[researcher],
+    name="Research Playground",
+    description="Um playground para pesquisa avançada na internet",
+    app_id="research-playground"
+)
+app = playground.get_app()
+
 if __name__ == "__main__":
-    serve_playground_app("researcher:app", reload=True)
+    playground.serve(app="researcher:app", reload=True, port=7777, host="localhost")

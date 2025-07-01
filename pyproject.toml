@@ -1,9 +1,15 @@
 [project]
 name = "researcher"
 version = "0.1.0"
-description = "Add your description here"
+description = "Researcher Agent"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "agno>=1.5.10",
+    "fastapi>=0.115.14",
+    "openai>=1.93.0",
+    "python-dotenv>=1.1.0",
+    "sqlalchemy>=2.0.41",
+    "tavily-python>=0.7.8",
+    "uvicorn>=0.35.0",
 ]
